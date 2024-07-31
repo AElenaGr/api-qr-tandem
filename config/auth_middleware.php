@@ -5,12 +5,8 @@ require '../config/database.php';
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
 $dotenv->load();
 
-
-
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
-
-
 
 function authenticate($requiredRole = null) {
     header("Access-Control-Allow-Origin: *");
@@ -33,14 +29,19 @@ function authenticate($requiredRole = null) {
 
         if ($jwt) {
             try {
-                 //$secretKey = '142345';
-                 $secretKey = $_ENV['SECREt_KEY'];
+                $secretKey = $_ENV['SECRET_KEY'];
+                if (!$secretKey) {
+                    throw new Exception('SECRET_KEY no está definido');
+                }
                 $decoded = JWT::decode($jwt, new Key($secretKey, 'HS256'));
 
+                // Definir jerarquía de roles
+                $roleHierarchy = ['guest' => 0, 'employee' => 1, 'admin' => 2];
+
                 // Verificar el rol del usuario si se requiere
-                if ($requiredRole && (!isset($decoded->role) || $decoded->role != $requiredRole)) {
+                if ($requiredRole && (!isset($decoded->role) || $roleHierarchy[$decoded->role] < $roleHierarchy[$requiredRole])) {
                     http_response_code(403);
-                    echo json_encode(['message' => 'Permiso denegado']);
+                    echo json_encode(['message' => 'Permiso denegado para el rol ' . $decoded->role]);
                     exit();
                 }
 
@@ -50,7 +51,7 @@ function authenticate($requiredRole = null) {
             } catch (Exception $e) {
                 // Token inválido
                 http_response_code(401);
-                echo json_encode(['message' => 'Acceso no autorizado']);
+                echo json_encode(['message' => 'Acceso no autorizado', 'error' => $e->getMessage()]);
                 exit();
             }
         } else {

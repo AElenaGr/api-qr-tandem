@@ -1,4 +1,7 @@
 <?php
+header('Cache-Control: no-cache, no-store, must-revalidate');
+header('Pragma: no-cache');
+header('Expires: 0');
 require "../config/cors.php";
 require '../vendor/autoload.php';
 require "../config/database.php";
@@ -22,4 +25,3 @@ FROM qr_codes
     header('Content-Type: application/json; charset=utf-8');
     echo json_encode(['qr_codes' => $qr_codes]);
     ?>
-    

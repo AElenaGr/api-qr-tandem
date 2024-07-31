@@ -10,7 +10,7 @@ $asunto = $input['asunto'];
 $mensaje = $input['mensaje'];
 
 //
-$to = "canodelacuadra@gmail.com";
+$to = "tandem.cristianvp@gmail.com";
 $subject="ticket de soporte de $nombre  con $email";
 $body=$mensaje;
 $headers = "From: $email";

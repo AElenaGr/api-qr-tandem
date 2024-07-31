@@ -1,11 +1,15 @@
 <?php
+// cors.php
+// header("Access-Control-Allow-Origin: *"); // Permite solicitudes desde cualquier origen
+// header("Access-Control-Allow-Methods: GET, POST, OPTIONS, DELETE, PUT");
+// header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
 require '../config/cors.php';
 require '../config/database.php';
 require '../vendor/autoload.php';
 use \Firebase\JWT\JWT;
 
 // Clave secreta para firmar el token (debería ser segura y no compartida)
-//$secretKey = '142345';
+//$secretKey = '12345';
 $secretKey = $_ENV['SECRET_KEY'];
 
 
@@ -27,23 +31,26 @@ if ($user && password_verify($password, $user['password'])) {
         'exp' => time() + 3600*24*365, // Tiempo de expiración (1 hora)
         'userId' => $user['id'], // Información del usuario
         'email' => $user['email'],
-        'role' => $user['role']
+        'role' => $user['role'],
+        'nombre' => $user['nombre'],
+        'image_url' => $user['image_url']
     ];
 
     // Generar el token
     $jwt = JWT::encode($tokenData, $secretKey, 'HS256');
 // devolver mensaje a usuario
-    echo json_encode([
-        'message' => 'Login exitoso',
-        'token' => $jwt,
-        'user' => [
-            'id' => $user['id'],
-            'email' => $user['email'],
-            'role' => $user['role'],
-            'nombre' => $user['nombre'],
+echo json_encode([
+    'message' => 'Login exitoso',
+    'token' => $jwt,
+    'user' => [
+        'id' => $user['id'],
+        'email' => $user['email'],
+        'role' => $user['role'], 
+        'nombre' => $user['nombre'],
+        'image_url' => $user['image_url']
+    ]
+]);
 
-        ]
-    ]);
 } else {
     echo json_encode(['message' => 'Credenciales incorrectas']);
 }
