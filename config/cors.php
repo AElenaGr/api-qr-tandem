@@ -1,6 +1,6 @@
 <?php
 // Permitir solo orígenes específicos
-$allowed_origins = ['http://localhost:8000', 'https://cristian.tandempatrimonionacional.eu','https://andra.tandempatrimonionacional.eu','https://cristina.tandempatrimonionacional.eu'];
+$allowed_origins = ['http://localhost:8000', 'https://cristian.tandempatrimonionacional.eu','https://andra.tandempatrimonionacional.eu','https://cristina.tandempatrimonionacional.eu','https://app-qr-cristian.netlify.app/'];
 
 if (isset($_SERVER['HTTP_ORIGIN']) && in_array($_SERVER['HTTP_ORIGIN'], $allowed_origins)) {
     header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
